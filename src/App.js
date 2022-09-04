@@ -3,7 +3,6 @@ import { FaRegCopy } from 'react-icons/fa'
 import { BsArrowRightShort } from 'react-icons/bs'
 import './input.css'
 const App = () => {
-  const [strength, setStrength] = useState('')
   const [password, setPassword] = useState('P4$5WOrD!')
   const [copied, setCopied] = useState(false)
   const [length, setLength] = useState(0)
@@ -11,7 +10,36 @@ const App = () => {
   const [lowercase, setLowercase] = useState(false)
   const [number, setNumber] = useState(false)
   const [symbol, setSymbol] = useState(false)
+  //This is an array containing numbers
+  const numberArray = [1, 2, 3, 4, 5, 6, 7, 8, 9, 0]
+  //This is an array containing symbols
+  const symbolArray = ['!', '@', '#', '$', '%', '^', '&', '*', '(', ')']
 
+  //this contains an array of alphabets codes
+  const characterCodes = Array.from(Array(26)).map((_e, i) => i + 97)
+
+  //this converts the charactercodes to lowercase
+  const lowerCaseLetters = characterCodes.map((l) => String.fromCharCode(l))
+
+  //this converts the lowercase characters to uppercase
+  const upperCaseLetters = lowerCaseLetters.map((u) => u.toUpperCase())
+
+  const generatePassword = () => {
+    //if lowercase, uppercase... is true, the variable lowercase authomatically becomes an array of lowercase numbers
+    const availableCharacters = [
+      ...(lowercase ? lowerCaseLetters : []),
+      ...(uppercase ? upperCaseLetters : []),
+      ...(number ? numberArray : []),
+      ...(symbol ? symbolArray : []),
+    ]
+    //This method generates randomly
+    const shuffleArray = (array) => array.sort(() => Math.random() - 0.5)
+    //thus function makes sure that the generated password length would be equal to the length we selected, then it the setPassword changes the value of the password variable.
+    const characters = shuffleArray(availableCharacters).slice(0, length)
+    setPassword(characters.join(''))
+    //return character returns the generated password to the function generatePassword
+    return characters
+  }
   return (
     <div className='App'>
       <section className='sec-one'>
@@ -263,7 +291,7 @@ const App = () => {
                         lowercase === true &&
                         number === true &&
                         symbol === true
-                      ? 'green'
+                      ? 'hsl(150, 100%, 66%)'
                       : '',
                 }}
               >
@@ -336,7 +364,7 @@ const App = () => {
                         lowercase === true &&
                         number === true &&
                         symbol === true
-                      ? 'green'
+                      ? 'hsl(150, 100%, 66%)'
                       : '',
                 }}
               >
@@ -372,7 +400,7 @@ const App = () => {
                         lowercase === true &&
                         number === true &&
                         symbol === true
-                      ? 'green'
+                      ? 'hsl(150, 100%, 66%)'
                       : '',
                 }}
               >
@@ -387,7 +415,7 @@ const App = () => {
                     lowercase === true &&
                     number === true &&
                     symbol === true
-                      ? 'green'
+                      ? 'hsl(150, 100%, 66%)'
                       : '',
                 }}
               >
@@ -395,7 +423,10 @@ const App = () => {
               </p>
             </div>
           </section>
-          <section className='mt-3 font-mono uppercase p-3 d-flex text-center sec-three font-semibold text-lg justify-center'>
+          <section
+            className='mt-3 font-mono uppercase p-3 d-flex text-center sec-three font-semibold text-lg justify-center'
+            onClick={generatePassword}
+          >
             <p>generate</p>
             <BsArrowRightShort className='arroe' />
           </section>
